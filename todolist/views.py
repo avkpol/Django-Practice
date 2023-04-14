@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.generic import ListView, DetailView
 from .models import Task, Tag
 
 
@@ -40,16 +39,6 @@ class TagDetailView(generic.DetailView):
     success_url = reverse_lazy("todolist:tag-list")
 
 
-#
-# class TaskListView(generic.ListView):
-#     model = Task
-#     template_name = 'todolist/task_list.html'
-#     context_object_name = 'tasks'
-#
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         return queryset.order_by('-done', '-datetime_created')
-#
 class TaskListView(generic.ListView):
     model = Task
     template_name = 'todolist/task_list.html'
@@ -89,18 +78,12 @@ class TaskDeleteView(generic.DeleteView):
     success_url = reverse_lazy("todolist:task-list")
 
 
-# class TaskDetailView(generic.DetailView):
-#     model = Task
-#     context_object_name = "task"
-#     template_name = "todolist/task_detail.html"
-#     success_url = reverse_lazy("todolist:task-list")
-
 class TaskCompleteView(generic.UpdateView):
     model = Task
     fields = ['done']
     success_url = reverse_lazy("todolist:task-list")
 
-    def get_object(self):
+    def get_object(self, **kwargs):
         task = super().get_object()
         task.done = True
         task.save()

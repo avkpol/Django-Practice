@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+
+    <form class="navbar-search form-inline" id="navbar-search-main">
+      <div class="input-group input-group-merge search-bar">
+
+
+      </div>
+    </form>
+  <br>
+  <br>
+  <h1>Tags List
+    <a href="{% url 'todolist:tag-form' %}" class="btn btn-outline-primary link-to-page">
+      + new tag
+    </a>
+  </h1>
+
+  <br>
+  <br>
+  {% if tags %}
+    <table class="table">
+      <thead>
+        <tr>
+
+          <th>Name</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tag in tags %}
+          <tr>
+           <td>
+
+                {{ tag.name }}
+
+              </a>
+            </td>
+
+            <td>
+              <a href="{% url 'todolist:tag-form' pk=tag.id %}" >
+                UPDATE
+              </a>
+            </td>
+            <td>
+              <a style="color: red" href="{% url 'todolist:tag-confirm-delete' pk=tag.id %}">
+                DELETE
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>There are no tags.</p>
+  {% endif %}
+{% endblock %}

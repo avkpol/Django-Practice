@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}<title>TODO list</title>{% endblock %}
+
+{% block content %}
+  <br>
+  <h1>TODO list
+   <a href="{% url 'todolist:task-form' %}" class="btn btn-outline-primary link-to-page">
+      + new task
+    </a>
+   </h1>
+    <form class="navbar-search form-inline" id="navbar-search-main">
+    <div class="input-group input-group-merge search-bar">
+    </div>
+  </form>
+  <br>
+  <br>
+  <br>
+  <br>
+  {% if tasks %}
+    {% for task in tasks %}
+      <h3>{{ task.content }}</h3>
+      <p>
+        {% if task.done %}
+          <form method="POST" action="{% url 'todolist:task-toggle' pk=task.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary">Undo</button>
+          </form>
+        {% else %}
+          <form method="POST" action="{% url 'todolist:task-toggle' pk=task.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Complete</button>
+          </form>
+        {% endif %}
+      </p>
+      <p>Created: {{ task.datetime_created }}</p>
+      <p>Deadline: {{ task.deadline }}</p>
+      <p>Status: {% if task.done %}
+
+    <p>Status: <span class="badge badge-success">Done</span></p>
+
+{% else %}
+
+    <p>Status: <span class="badge badge-danger">Not done</span></p>
+
+{% endif %}
+      </p>
+      <p>Tags:
+        {% for tag in task.tags.all %}
+          <span class="badge badge-primary">{{ tag.name }}</span>
+        {% endfor %}
+      </p>
+     <a href="{% url 'todolist:task-form' pk=task.pk %}" class="btn btn-outline-secondary">Update</a>
+      <a href="{% url 'todolist:task-confirm-delete' pk=task.pk %}" class="btn btn-outline-secondary">Delete</a>
+
+      <hr>
+    {% endfor %}
+  {% else %}
+    <p>There are no tasks.</p>
+  {% endif %}
+{% endblock %}
